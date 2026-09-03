@@ -1,0 +1,388 @@
+<title>Comex AFP Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F2F5F6;
+    --card:#FBFCFC;
+    --ink:#12202A;
+    --muted:#5D6E79;
+    --faint:#8798A2;
+    --line:#D3DCE1;
+    --line-soft:#E3EAED;
+    --accent:#0E5A68;
+    --accent-soft:#DCEBEC;
+    --ok:#1E6B4F;
+    --ok-soft:#DCEDE4;
+    --flag:#9A5410;
+    --flag-soft:#F3E6D4;
+    --shadow:0 1px 2px rgba(18,32,42,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0D1418;
+      --card:#141E24;
+      --ink:#E4EDF1;
+      --muted:#9AAAB4;
+      --faint:#71838E;
+      --line:#27353D;
+      --line-soft:#1E2A31;
+      --accent:#63BECB;
+      --accent-soft:#14313A;
+      --ok:#68C29B;
+      --ok-soft:#122E24;
+      --flag:#D9A25F;
+      --flag-soft:#332413;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0D1418;
+    --card:#141E24;
+    --ink:#E4EDF1;
+    --muted:#9AAAB4;
+    --faint:#71838E;
+    --line:#27353D;
+    --line-soft:#1E2A31;
+    --accent:#63BECB;
+    --accent-soft:#14313A;
+    --ok:#68C29B;
+    --ok-soft:#122E24;
+    --flag:#D9A25F;
+    --flag-soft:#332413;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,"Times New Roman",serif;
+    font-size:16.5px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:48px 26px 96px}
+
+  /* ---- masthead ---- */
+  .mast{
+    display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between;
+    padding-bottom:20px;border-bottom:2px solid var(--ink);
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 10px;
+  }
+  h1{
+    font-family:"Archivo",system-ui,sans-serif;
+    font-weight:700;font-size:clamp(30px,5vw,44px);
+    letter-spacing:-.022em;line-height:1.03;margin:0;text-wrap:balance;
+  }
+  .sub{margin:12px 0 0;max-width:56ch;color:var(--muted);font-size:16px}
+  .stamp{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+    color:var(--faint);text-align:right;line-height:1.7;white-space:nowrap;
+  }
+  .stamp b{color:var(--ink);font-weight:600}
+
+  /* ---- key figures ---- */
+  .facts{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:0;margin:0;padding:22px 0 24px;border-bottom:1px solid var(--line);
+  }
+  .fact{padding:0 20px;border-left:1px solid var(--line-soft)}
+  .fact:first-child{padding-left:0;border-left:0}
+  .fact dt{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:0 0 6px;
+  }
+  .fact dd{
+    margin:0;font-family:"Archivo",system-ui,sans-serif;font-weight:600;
+    font-size:22px;letter-spacing:-.01em;font-variant-numeric:tabular-nums;
+  }
+  .fact dd small{display:block;font-family:"Newsreader",serif;font-weight:400;font-size:13px;color:var(--muted);letter-spacing:0;margin-top:3px}
+
+  /* ---- refs ---- */
+  .refs{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 34px}
+  .ref{
+    display:flex;align-items:baseline;gap:10px;padding:9px 14px;
+    background:var(--card);border:1px solid var(--line);border-radius:3px;box-shadow:var(--shadow);
+  }
+  .ref code{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;font-weight:600;letter-spacing:-.01em;
+  }
+  .ref span{font-size:13.5px;color:var(--muted)}
+  .verdict{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.11em;
+    text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:600;
+  }
+  .verdict.ok{background:var(--ok-soft);color:var(--ok)}
+  .verdict.no{background:var(--flag-soft);color:var(--flag)}
+
+  /* ---- note ---- */
+  .note{
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--flag);
+    border-radius:2px;padding:16px 20px;margin:0 0 44px;font-size:15.5px;color:var(--muted);
+  }
+  .note strong{color:var(--ink);font-weight:500}
+
+  /* ---- ledger ---- */
+  section{margin-bottom:44px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin:0 0 4px;padding-bottom:10px;border-bottom:1px solid var(--ink)}
+  .sec-head h2{
+    font-family:"Archivo",system-ui,sans-serif;font-size:16px;font-weight:600;
+    letter-spacing:.01em;margin:0;
+  }
+  .sec-head .count{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--faint);margin-left:auto;
+  }
+  .sec-head p{margin:0;font-size:14px;color:var(--muted)}
+
+  .rows{display:block}
+  .row{
+    display:grid;
+    grid-template-columns:88px 1fr 158px 26px;
+    gap:0 16px;align-items:baseline;
+    padding:11px 0;border-bottom:1px solid var(--line-soft);
+    text-decoration:none;color:inherit;
+  }
+  .row:hover,.row:focus-visible{background:var(--accent-soft);outline:none}
+  .row:focus-visible{box-shadow:inset 3px 0 0 var(--accent)}
+  .d{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;
+    color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .s{font-size:15.5px;line-height:1.4}
+  .s em{display:block;font-style:normal;font-size:13.5px;color:var(--muted);margin-top:3px}
+  .s .tag{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.09em;
+    text-transform:uppercase;font-weight:600;padding:1px 6px;border-radius:2px;margin-right:7px;
+    position:relative;top:-1px;
+  }
+  .tag.ok{background:var(--ok-soft);color:var(--ok)}
+  .tag.no{background:var(--flag-soft);color:var(--flag)}
+  .f{font-size:13.5px;color:var(--muted);line-height:1.4}
+  .f b{font-weight:500;color:var(--ink)}
+  .f i{font-style:normal;display:block;font-size:11.5px;color:var(--faint)}
+  .a{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+    color:var(--accent);text-align:right;
+  }
+  @media (max-width:720px){
+    .row{grid-template-columns:74px 1fr 22px;gap:0 12px}
+    .f{grid-column:2;font-size:12.5px;margin-top:4px}
+    .fact{padding:0;border-left:0}
+    .facts{gap:18px}
+  }
+
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+  footer h3{font-family:"Archivo",sans-serif;font-size:13px;letter-spacing:.03em;margin:0 0 8px;color:var(--ink)}
+  footer ul{margin:0;padding-left:18px}
+  footer li{margin-bottom:6px}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <p class="eyebrow">North Herts Utilities × Comex 2000 (UK)</p>
+      <h1>Comex AFP Ledger</h1>
+      <p class="sub">Every email in Rob Jones's Outlook that carries, chases, assesses or deducts from an application for payment on the Gigaclear fibre build.</p>
+    </div>
+    <div class="stamp">
+      Pulled <b>3 Sep 2026</b><br>
+      Mailbox robjones@nhultd.com<br>
+      All folders, all senders
+    </div>
+  </header>
+
+  <dl class="facts">
+    <div class="fact"><dt>Emails found</dt><dd>75<small>plus the underlying subcontract</small></dd></div>
+    <div class="fact"><dt>First</dt><dd>10 Sep 21<small>AFP template issued</small></dd></div>
+    <div class="fact"><dt>Last</dt><dd>3 Aug 22<small>final approved payment</small></dd></div>
+    <div class="fact"><dt>Formal refs</dt><dd>3<small>2 approved, 1 rejected</small></dd></div>
+  </dl>
+
+  <div class="refs">
+    <div class="ref"><span class="verdict ok">Approved</span><code>AFP03042022</code><span>EOS notice, 7 Apr 2022</span></div>
+    <div class="ref"><span class="verdict ok">Approved</span><code>AFP12062022</code><span>EOS notice, 3 Aug 2022 — £6,061.00 due</span></div>
+    <div class="ref"><span class="verdict no">Rejected</span><code>296504</code><span>EOS notice, 13 Jul 2022</span></div>
+  </div>
+
+  <p class="note"><strong>The EOS originals aren't in your mailbox.</strong> Comex's EOS system sent every APPROVED / REJECTED notice to <b>Jack@nhultd.com</b>, not to you. They survive here only as quoted text inside Steve Redding's forwards below. If you need the originals with their full assessment attachments, they sit in Jack's mailbox — worth pulling before you put the retention claim together.</p>
+
+  <section>
+    <div class="sec-head"><h2>Setting up the AFP regime</h2><p>Sep 2021</p><span class="count">6 emails</span></div>
+    <div class="rows" id="s1"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Applications, assessments and deductions</h2><p>Sep–Dec 2021</p><span class="count">33 emails</span></div>
+    <div class="rows" id="s2"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Applications, approvals, retention and contra charges</h2><p>Jan–Aug 2022</p><span class="count">36 emails</span></div>
+    <div class="rows" id="s3"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Underlying contract</h2><p>Jun 2021</p><span class="count">1 email</span></div>
+    <div class="rows" id="s4"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What Xero shows — invoices raised on Comex</h2><p>Sep 2021 – Sep 2022</p><span class="count">48 invoices</span></div>
+    <dl class="facts" style="border-bottom:0;padding-bottom:8px">
+      <div class="fact"><dt>Gross invoiced</dt><dd>£1,117,711<small>48 invoices, all marked paid</small></dd></div>
+      <div class="fact"><dt>Cash received</dt><dd>£894,169<small>exactly 80% of every invoice</small></dd></div>
+      <div class="fact"><dt>Withheld at source</dt><dd>£223,542<small>20% CIS on the full value</small></dd></div>
+      <div class="fact"><dt>Retention (est.)</dt><dd>£58,827<small>if invoiced values are net of 5%</small></dd></div>
+    </dl>
+    <p class="note" style="border-left-color:var(--accent);margin-bottom:20px"><strong>Two things stand out.</strong> First, every single invoice was paid at exactly 80% — a flat 20% CIS deduction on the whole value, materials included; CIS should normally come off the labour element only, so that's one for Ashley Blake to check. Second, the 5% retention never appears in Xero at all — it was held back before the assessed figures were even invoiced, so the ~£58.8k estimate above is the pot to claim, and the paper trail for it lives in the AFP assessment attachments in the emails, not in the accounts.</p>
+    <div class="rows" id="s5"></div>
+  </section>
+
+  <footer>
+    <h3>How this was searched</h3>
+    <ul>
+      <li>Swept by sender (all <code>@comex2000uk.com</code> addresses, <code>@nhultd.com</code>) and by term — AFP, application for payment, AFP assessment, measures, retention, contra charge — across every folder, paginated to exhaustion.</li>
+      <li><b>Excluded:</b> the large <code>defects@comex2000uk.com</code> "Subbie Defect Final" run through 2024 and the FPN notices, none of which concern an application for payment. Contra-charge and retention emails <b>are</b> included, because those sums were taken off the applications.</li>
+      <li><b>Also excluded:</b> the separate VolkerHighways application corpus (2023–2026, AFP 357, AFP 362, "application 17") — different counterparty, different dispute.</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+const H="https://outlook.office365.com/owa/?ItemID=", T="&exvsurl=1&viewmodel=ReadMessageItem";
+const S1=[
+["2021-09-10","RE: Rate Card","Steve Redding","NHU",0,"Thread carrying Manny Purewal's AFP template","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABZvgSQgAAAA%3D%3D"],
+["2021-09-10","FW: Rate Card","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABZvgSQwAAAA%3D%3D"],
+["2021-09-10","RE: Rate Card","Manny Purewal","Comex",1,"“AFP template with the 2 work packages added in”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABZvgSRAAAAA%3D%3D"],
+["2021-09-10","FW: Rate Card","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABZvgSRgAAAA%3D%3D"],
+["2021-09-14","FW: Rate Card","Steve Redding","NHU",0,"Manny sets the cycle: application, 1 week assessment, payment 2 weeks later","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABaaSrCAAAAA%3D%3D"],
+["2021-09-15","RE: Rate Card","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABaaSrKAAAAA%3D%3D"]
+];
+const S2=[
+["2021-09-24","pay application","Steve Redding","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABcFFNSAAAAA%3D%3D"],
+["2021-09-29","FW: AFP — for NHU","Steve Redding","NHU",1,"“I don't know what I've been paid for” — first challenge to an assessment","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABcr4SlgAAAA%3D%3D"],
+["2021-09-29","RE: AFP — for NHU","Michael Rivers","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABcr4SmQAAAA%3D%3D"],
+["2021-10-04","Application","Steve Redding","NHU",0,"Lists the streets ready for payment","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABddEsZQAAAA%3D%3D"],
+["2021-10-08","pay application","Steve Redding","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABeZEFegAAAA%3D%3D"],
+["2021-10-08","RE: pay application","Hugo Hunte","Comex",0,"“Get both the AFPs back to Steve so they can be submitted and paid”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABeZEFfQAAAA%3D%3D"],
+["2021-10-26","Fwd: Copy of NHU AFP w/e 15.10.21.xlsx","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABg6LUVgAAAA%3D%3D"],
+["2021-10-27","application w/e 23.10.21","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABg6LUdgAAAA%3D%3D"],
+["2021-11-01","AFPs","Manny Purewal","Comex",1,"AFP assessment files plus copies of the invoices deducted","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABiORO4AAAAA%3D%3D"],
+["2021-11-03","RE: Payment","Hugo Hunte","Comex",0,"“Are you referring to the AFP w/e 22nd October?”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABirYTEQAAAA%3D%3D"],
+["2021-11-03","Re: Payment","Rob Jones","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwABirZiJwAAAA%3D%3D"],
+["2021-11-03","RE: Payment","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABirYTEgAAAA%3D%3D"],
+["2021-11-03","Re: Payment","Rob Jones","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwABirZiKAAAAA%3D%3D"],
+["2021-11-23","Re: PIA payments","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABl8p8LAAAAA%3D%3D"],
+["2021-11-25","FW: NHU AFP 05/11/21 & 12/11/21","Steve Redding","NHU",1,"Ben O'Hara's issued AFPs for two weeks","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABl8p8jgAAAA%3D%3D"],
+["2021-11-30","RE: PIA payments","Russell Banks","Comex",0,"Approves the measures for payment","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABm5QwVwAAAA%3D%3D"],
+["2021-12-07","RE: application break down","Hugo Hunte","Comex",1,"“The summary total does not include any retention deductions”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABoSIUEgAAAA%3D%3D"],
+["2021-12-08","RE: application break down","Rob Jones","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwAAARgfFAAAAA%3D%3D"],
+["2021-12-08","RE: application break down","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABoSIUMAAAAA%3D%3D"],
+["2021-12-08","RE: application break down","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABoSIUMgAAAA%3D%3D"],
+["2021-12-13","Application","Hugo Hunte","Comex",0,"Submission cut-off — miss it and the payment window is missed","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPT8QAAAA%3D%3D"],
+["2021-12-13","Re: Application","Rob Jones","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwABpUP7pwAAAA%3D%3D"],
+["2021-12-13","RE: payment for W/E 11.12.21","Hugo Hunte","Comex",0,"“PIA measures were added to the AFP w/e 26.11.2021”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPUEQAAAA%3D%3D"],
+["2021-12-13","Re: payment for W/E 11.12.21","Rob Jones","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwAAARgfGAAAAA%3D%3D"],
+["2021-12-13","Re: payment for W/E 11.12.21","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPUEgAAAA%3D%3D"],
+["2021-12-13","RE: payment for W/E 11.12.21","Rob Jones","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwAAARgfGQAAAA%3D%3D"],
+["2021-12-13","FW: AFPs","Hugo Hunte","Comex",1,"Forwards Manny's 01/11/21 assessments and deducted invoices","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPUEwAAAA%3D%3D"],
+["2021-12-13","FW: AFP Files","Hugo Hunte","Comex",1,"Forwards Manny's 05/11/21 “latest AFP / assessment files”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPUFAAAAA%3D%3D"],
+["2021-12-13","FW: AFPs","Hugo Hunte","Comex",1,"Forwards Manny's 11/10/21 “AFPs which will be processed”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPUFQAAAA%3D%3D"],
+["2021-12-13","FW: AFP — for NHU","Hugo Hunte","Comex",1,"Forwards Manny's 27/09/21","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABpUPUFgAAAA%3D%3D"],
+["2021-12-21","application","Steve Redding","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABqmKt7gAAAA%3D%3D"],
+["2021-12-22","RE: application","Michael Rivers","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABqyesJgAAAA%3D%3D"],
+["2021-12-23","RE: application w/e 18/12/21","Steve Redding","NHU",1,"Application measures to Ben O'Hara; Sharon Sweet confirms a payment","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABq4I4LgAAAA%3D%3D"]
+];
+const S3=[
+["2022-01-11","Claim","Russell Banks","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABuC6C9QAAAA%3D%3D"],
+["2022-01-11","RE: Claim","Hugo Hunte","Comex",0,"“Complete a measure, an application for you, and try and push through”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABuC6C%2BwAAAA%3D%3D"],
+["2022-01-11","Application","Russell Banks","Comex",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABuC6C%2FgAAAA%3D%3D"],
+["2022-01-24","application w/e 22/01/22","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABwEwdlQAAAA%3D%3D"],
+["2022-01-26","RE: PIA payment","Russell Banks","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgFjAAAARw2C4FWkqEmIvdptNv4WZwABwjLQOwAAAA%3D%3D"],
+["2022-01-31","Measures","Russell Banks","Comex",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABxOY3%2BAAAAA%3D%3D"],
+["2022-01-31","Fwd: Measures","Rob Jones","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwABxOcmPAAAAA%3D%3D"],
+["2022-03-08","RE: NHU Remedials","Hugo Hunte","Comex",0,"Comex recovering remedials from NHU's retention pot","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB3M55qQAAAA%3D%3D"],
+["2022-03-10","Re: breakdown","Hugo Hunte","Comex",0,"Payment breakdown requested from Comex finance","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB3r1NUwAAAA%3D%3D"],
+["2022-03-10","Re: breakdown","Steve Redding","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB3r1NVAAAAA%3D%3D"],
+["2022-04-01","FW: Contractor Payments","Hugo Hunte","Comex",0,"","AAMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAAAAABFikN37gOKRpEn75Gret7FBwBHDYLgVaSoSYi92m02%2FhZnAAAAAAEMAABHDYLgVaSoSYi92m02%2FhZnAAHtE6qqAAA%3D"],
+["2022-04-01","FW: NHU Payment","Hugo Hunte","Comex",0,"Ben O'Hara: “latest AFP for NHU with details and payment sheet attached”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB7ROqrQAAAA%3D%3D"],
+["2022-04-07","FW: APPROVED: Comex Application for Payment ref “AFP03042022”","Steve Redding","NHU",1,"EOS notice of 7 Apr, quoted in full; payment date 30/04/22 queried","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB8RNCngAAAA%3D%3D","ok"],
+["2022-04-13","payment","Steve Redding","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB9HPmRQAAAA%3D%3D"],
+["2022-04-13","RE: payment","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB9HPmRwAAAA%3D%3D"],
+["2022-04-13","RE: payment","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwAB9HPmSAAAAA%3D%3D"],
+["2022-05-16","GRAB","Steve Redding","NHU",1,"Retention being taken on the grab service","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACCcLvywAAAA%3D%3D"],
+["2022-05-16","Re: GRAB","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACCcLvzwAAAA%3D%3D"],
+["2022-05-18","retension","Steve Redding","NHU",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACCcLv%2FQAAAA%3D%3D"],
+["2022-05-18","Re: retension","Hugo Hunte","Comex",0,"“Due to how the contract was set up” — separate contract needed for grab only","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACCcLv%2FgAAAA%3D%3D"],
+["2022-06-30","Fwd: North Herts Utilities Contra charge invoices","Jack Redding","NHU",1,"Sharon Sweet's contra-charge invoices, offset against the applications","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACKL2HCgAAAA%3D%3D"],
+["2022-06-30","FW: North Herts Utilities Contra charge invoices","Rob Jones","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwAAARg1sgAAAA%3D%3D"],
+["2022-06-30","RE: North Herts Utilities Contra charge invoices","Hugo Hunte","Comex",0,"“I will go back and get them to remove it”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACKL2HEQAAAA%3D%3D"],
+["2022-07-13","grab","Steve Redding","NHU",1,"Asking for retention to be stopped","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACL2EsvQAAAA%3D%3D"],
+["2022-07-13","FW: REJECTED — Comex Application for Payment ref “296504”","Steve Redding","NHU",0,"EOS notice of 13 Jul, quoted in full","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACL2Es0wAAAA%3D%3D","no"],
+["2022-07-13","RE: REJECTED — Comex Application for Payment ref “296504”","Hugo Hunte","Comex",0,"“Ain't got a clue, it says no action required”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACL2Es1AAAAA%3D%3D","no"],
+["2022-07-20","RE: grab","Hugo Hunte","Comex",0,"“Payment will be Friday 5th August as you have missed the cut off”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACNG1oqQAAAA%3D%3D"],
+["2022-07-28","FW: Contra charges","Jack Redding","NHU",1,"Further Sharon Sweet contra charges","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACO06NrQAAAA%3D%3D"],
+["2022-07-28","FW: Contra charges","Rob Jones","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwAAARg1vgAAAA%3D%3D"],
+["2022-08-01","RE: Contra charges","Hugo Hunte","Comex",0,"“I will look into it and come back to you”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcBx7gAAAA%3D%3D"],
+["2022-08-03","Fwd: APPROVED: Comex Application for Payment ref “AFP12062022”","Steve Redding","NHU",1,"EOS notice of 3 Aug, quoted in full","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcByJAAAAA%3D%3D","ok"],
+["2022-08-03","FW: APPROVED … “AFP12062022”","Steve Redding","NHU",1,"“We missed a payment run last week, so should be due 2 weeks on Friday”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcByJQAAAA%3D%3D","ok"],
+["2022-08-03","FW: APPROVED … “AFP12062022”","Steve Redding","NHU",1,"To Sharon Sweet and Hugo","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcByJgAAAA%3D%3D","ok"],
+["2022-08-03","RE: APPROVED … “AFP12062022”","Hugo Hunte","Comex",0,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcByJwAAAA%3D%3D","ok"],
+["2022-08-03","FW: APPROVED … “AFP12062022”","Steve Redding","NHU",1,"","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcByKgAAAA%3D%3D","ok"],
+["2022-08-03","RE: APPROVED … “AFP12062022”","Sharon Sweet","Comex",0,"“The payment due to yourselves on Friday is £6,061.00”","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwACPcByKwAAAA%3D%3D","ok"]
+];
+const S4=[
+["2021-06-02","Comex — NHU — Draft Contract Documents","Anil Rai","Comex",1,"The subcontract the whole AFP regime runs under","AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd%2B4DikaRJ%2B%2BRq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwABIzKgUAAAAA%3D%3D"]
+];
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function render(id, rows){
+  document.getElementById(id).innerHTML = rows.map(r=>{
+    const [d,subj,who,side,att,note,item,flag] = r;
+    const tag = flag==="ok" ? '<span class="tag ok">Approved</span>' : flag==="no" ? '<span class="tag no">Rejected</span>' : '';
+    return '<a class="row" target="_blank" rel="noopener" href="'+H+item+T+'">'
+      + '<span class="d">'+d+'</span>'
+      + '<span class="s">'+tag+esc(subj)+(note?'<em>'+esc(note)+'</em>':'')+'</span>'
+      + '<span class="f"><b>'+esc(who)+'</b><i>'+side+(att?' · attachment':'')+'</i></span>'
+      + '<span class="a">open</span></a>';
+  }).join("");
+}
+render("s1",S1); render("s2",S2); render("s3",S3); render("s4",S4);
+
+const X=[
+["2021-09-10","10/09",44456.01],["2021-09-24","24/09",42847.66],["2021-10-08","08/10",101167.79],
+["2021-10-22","22/10",58682.93],["2021-10-29","INV-0018",75475.80],["2021-11-05","05/11",54311.49],
+["2021-11-05","05/11 2",56822.59],["2021-11-12","12/11",66748.91],["2021-11-19","19/11",50255.40],
+["2021-11-26","26/11",62620.34],["2021-12-03","03/12",73823.61],["2021-12-10","10/12",21439.79],
+["2021-12-20","20/12",29636.83],["2022-01-12","12/01",25560.55],["2022-01-14","INV-0020",15270.83],
+["2022-01-14","14/01",9443.10],["2022-01-21","21/01",25886.74],["2022-01-28","28/01",67600.67],
+["2022-02-18","18/02",9874.14],["2022-02-18","21/02",28043.27],["2022-02-25","25/02",2199.68],
+["2022-03-03","03/03",7062.80],["2022-03-04","04/03",18091.39],["2022-03-11","11/03",22215.72],
+["2022-03-23","23/03",14353.78],["2022-03-25","25/03",27958.95],["2022-04-07","51",24466.69],
+["2022-04-19","19/04",12841.40],["2022-04-20","20/04",2470.00],["2022-04-26","26/04",2470.00],
+["2022-05-04","04/05",3087.50],["2022-05-18","18/05",3952.00],["2022-05-25","25/05",3087.50],
+["2022-05-25","INV-0021",3087.50],["2022-06-01","01/06",3087.50],["2022-06-06","INV-0022",1852.50],
+["2022-06-22","INV-0023",3443.75],["2022-06-29","INV-0024",3443.75],["2022-07-01","INV-0026",3443.75],
+["2022-07-08","INV-0025",3443.75],["2022-07-14","INV-0027",3443.75],["2022-08-03","INV-0029",4132.50],
+["2022-08-05","INV-0028",7576.25,"Matches AFP12062022 — the £6,061.00 in Sharon Sweet's email is this invoice less 20% CIS"],
+["2022-08-11","INV-0031",3443.75],["2022-08-17","INV-0030",3443.75],["2022-08-26","INV-0032",3443.75],
+["2022-09-05","INV-0033",3443.75],["2022-09-16","INV-0034",2755.00]
+];
+const gbp = n => "£"+n.toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+document.getElementById("s5").innerHTML = X.map(r=>{
+  const [d,no,gross,note]=r, paid=Math.round(gross*80)/100;
+  return '<div class="row" style="grid-template-columns:88px 1fr 130px 130px">'
+    + '<span class="d">'+d+'</span>'
+    + '<span class="s">Invoice '+esc(no)+(note?'<em>'+esc(note)+'</em>':'')+'</span>'
+    + '<span class="f" style="text-align:right"><b>'+gbp(gross)+'</b><i>gross</i></span>'
+    + '<span class="f" style="text-align:right"><b>'+gbp(paid)+'</b><i>received</i></span></div>';
+}).join("");
+</script>
+
