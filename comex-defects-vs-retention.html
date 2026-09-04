@@ -1,0 +1,406 @@
+<title>Defects Against the Retention</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F2F5F6;
+    --card:#FBFCFC;
+    --ink:#12202A;
+    --muted:#5D6E79;
+    --faint:#8798A2;
+    --line:#D3DCE1;
+    --line-soft:#E3EAED;
+    --accent:#0E5A68;
+    --accent-soft:#DCEBEC;
+    --ok:#1E6B4F;
+    --ok-soft:#DCEDE4;
+    --flag:#9A5410;
+    --flag-soft:#F3E6D4;
+    --grey:#5D6E79;
+    --grey-soft:#E3EAED;
+    --shadow:0 1px 2px rgba(18,32,42,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0D1418;
+      --card:#141E24;
+      --ink:#E4EDF1;
+      --muted:#9AAAB4;
+      --faint:#71838E;
+      --line:#27353D;
+      --line-soft:#1E2A31;
+      --accent:#63BECB;
+      --accent-soft:#14313A;
+      --ok:#68C29B;
+      --ok-soft:#122E24;
+      --flag:#D9A25F;
+      --flag-soft:#332413;
+      --grey:#9AAAB4;
+      --grey-soft:#1E2A31;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0D1418;
+    --card:#141E24;
+    --ink:#E4EDF1;
+    --muted:#9AAAB4;
+    --faint:#71838E;
+    --line:#27353D;
+    --line-soft:#1E2A31;
+    --accent:#63BECB;
+    --accent-soft:#14313A;
+    --ok:#68C29B;
+    --ok-soft:#122E24;
+    --flag:#D9A25F;
+    --flag-soft:#332413;
+    --grey:#9AAAB4;
+    --grey-soft:#1E2A31;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,"Times New Roman",serif;
+    font-size:16.5px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:48px 26px 96px}
+
+  /* ---- masthead ---- */
+  .mast{
+    display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between;
+    padding-bottom:20px;border-bottom:2px solid var(--ink);
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 10px;
+  }
+  h1{
+    font-family:"Archivo",system-ui,sans-serif;
+    font-weight:700;font-size:clamp(30px,5vw,44px);
+    letter-spacing:-.022em;line-height:1.03;margin:0;text-wrap:balance;
+  }
+  .sub{margin:12px 0 0;max-width:58ch;color:var(--muted);font-size:16px}
+  .stamp{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+    color:var(--faint);text-align:right;line-height:1.7;white-space:nowrap;
+  }
+  .stamp b{color:var(--ink);font-weight:600}
+
+  /* ---- key figures ---- */
+  .facts{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:0;margin:0;padding:22px 0 24px;border-bottom:1px solid var(--line);
+  }
+  .fact{padding:0 20px;border-left:1px solid var(--line-soft)}
+  .fact:first-child{padding-left:0;border-left:0}
+  .fact dt{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:0 0 6px;
+  }
+  .fact dd{
+    margin:0;font-family:"Archivo",system-ui,sans-serif;font-weight:600;
+    font-size:22px;letter-spacing:-.01em;font-variant-numeric:tabular-nums;
+  }
+  .fact dd small{display:block;font-family:"Newsreader",serif;font-weight:400;font-size:13px;color:var(--muted);letter-spacing:0;margin-top:3px}
+  .fact.ok dd{color:var(--ok)}
+  .fact.flag dd{color:var(--flag)}
+
+  /* ---- verdict chips ---- */
+  .verdict{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.11em;
+    text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:600;white-space:nowrap;
+  }
+  .verdict.ok{background:var(--ok-soft);color:var(--ok)}
+  .verdict.no{background:var(--flag-soft);color:var(--flag)}
+  .verdict.mid{background:var(--grey-soft);color:var(--grey)}
+
+  /* ---- note ---- */
+  .note{
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--flag);
+    border-radius:2px;padding:16px 20px;margin:26px 0 0;font-size:15.5px;color:var(--muted);
+  }
+  .note strong{color:var(--ink);font-weight:500}
+  .note.accent{border-left-color:var(--accent)}
+  .note.ok{border-left-color:var(--ok)}
+  blockquote{
+    margin:28px 0 0;padding:0 0 0 18px;border-left:2px solid var(--line);
+    font-size:17px;color:var(--ink);max-width:62ch;
+  }
+  blockquote cite{display:block;font-style:normal;font-size:13.5px;color:var(--muted);margin-top:8px}
+
+  /* ---- position table ---- */
+  .position{margin:40px 0 0}
+  .position table{width:100%;border-collapse:collapse;font-size:15px}
+  .position th,.position td{padding:9px 0;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+  .position th{font-family:"Archivo",sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--muted)}
+  .position td.n,.position th.n{text-align:right;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .position tr.total td{border-bottom:2px solid var(--ink);font-weight:500}
+  .position tr.total td.n{font-weight:600}
+  .position td small{display:block;color:var(--muted);font-size:13px}
+  .tbl{overflow-x:auto}
+
+  /* ---- ledger ---- */
+  section{margin-top:52px}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin:0 0 4px;padding-bottom:10px;border-bottom:1px solid var(--ink)}
+  .sec-head h2{
+    font-family:"Archivo",system-ui,sans-serif;font-size:16px;font-weight:600;
+    letter-spacing:.01em;margin:0;
+  }
+  .sec-head .count{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--faint);margin-left:auto;white-space:nowrap;
+  }
+  .sec-head p{margin:0;font-size:14px;color:var(--muted);flex-basis:100%}
+
+  .row{
+    display:grid;
+    grid-template-columns:200px 1fr 118px;
+    gap:6px 18px;align-items:baseline;
+    padding:14px 0;border-bottom:1px solid var(--line-soft);
+  }
+  .ref{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;font-weight:600;letter-spacing:-.01em}
+  .ref small{display:block;font-family:"Newsreader",serif;font-weight:400;font-size:13.5px;color:var(--muted);letter-spacing:0;margin-top:3px;line-height:1.4}
+  .why{font-size:15px;line-height:1.5;color:var(--ink)}
+  .why em{font-style:normal;color:var(--muted)}
+  .charges{margin:6px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px}
+  .charges li{font-size:13.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:0 10px;align-items:baseline}
+  .charges .d{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .charges .amt{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .charges a{color:var(--accent);text-decoration:none;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px}
+  .charges a:hover,.charges a:focus-visible{text-decoration:underline;outline:none}
+  .sum{text-align:right}
+  .sum b{display:block;font-family:"Archivo",sans-serif;font-weight:600;font-size:18px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .sum .verdict{margin-top:6px;display:inline-block}
+  .sec-total{
+    display:flex;justify-content:flex-end;gap:16px;align-items:baseline;padding:12px 0 0;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--muted);
+  }
+  .sec-total b{font-family:"Archivo",sans-serif;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+  @media (max-width:720px){
+    .row{grid-template-columns:1fr 100px}
+    .why{grid-column:1 / -1}
+    .facts{gap:18px}
+    .fact{padding:0;border-left:0}
+  }
+
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+  footer h3{font-family:"Archivo",sans-serif;font-size:13px;letter-spacing:.03em;margin:0 0 8px;color:var(--ink)}
+  footer ul{margin:0;padding-left:18px}
+  footer li{margin-bottom:6px}
+  footer code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <p class="eyebrow">North Herts Utilities × Comex 2000 (UK)</p>
+      <h1>Defects Against the Retention</h1>
+      <p class="sub">Every defect and contra charge Comex has raised on NHU, checked against the permits, measures and applications in your mailbox. If a job was never yours, its charge cannot come off the 5%.</p>
+    </div>
+    <div class="stamp">
+      Pulled <b>4 Sep 2026</b><br>
+      Mailbox robjones@nhultd.com<br>
+      Xero contact COMEX 2000
+    </div>
+  </header>
+
+  <dl class="facts">
+    <div class="fact"><dt>Retention Comex holds</dt><dd>£57,350.82<small>the RETENTION line on 47 of 48 invoices</small></dd></div>
+    <div class="fact"><dt>Charged to NHU</dt><dd>£8,670.28<small>25 defect finals + 6 contra invoices, 27 refs</small></dd></div>
+    <div class="fact ok"><dt>Not your work</dt><dd>£1,551.00<small>4 refs, no NHU permit or measure anywhere</small></dd></div>
+    <div class="fact flag"><dt>Likely your work</dt><dd>£2,994.50<small>8 refs with an NHU permit or on Comex's own NHU list</small></dd></div>
+    <div class="fact"><dt>Unclear</dt><dd>£4,124.78<small>15 refs, no permit evidence either way</small></dd></div>
+  </dl>
+
+  <p class="note ok"><strong>The headline.</strong> Even if Comex made every single charge stick, the retention still owes you <b>£48,680.54</b>. Strip out the four Kings Sutton and CNGHWS refs that were never yours and the most they can justify is £7,119.28. And £3,608.00 of the pot was taken off grab-lorry hire after your civils finished on 19 Apr 2022, which Hugo Hunte himself said on 18 May 2022 should have sat on a separate contract.</p>
+
+  <blockquote>
+    “We have had many emails from comex defect team with defects that are not ours.”
+    <cite>Steve Redding to Hugo Hunte, 9 Jan 2023, quoted in Hugo's reply “RE: defects”</cite>
+  </blockquote>
+
+  <div class="position tbl">
+    <table>
+      <thead><tr><th>Retention position</th><th class="n">£</th></tr></thead>
+      <tbody>
+        <tr><td>Retention deducted on civils invoices<small>28 invoices, 10 Sep 2021 to 19 Apr 2022</small></td><td class="n">53,742.82</td></tr>
+        <tr><td>Retention deducted on grab-lorry invoices<small>20 invoices, 20 Apr to 16 Sep 2022, flat day-rate sums</small></td><td class="n">3,608.00</td></tr>
+        <tr class="total"><td>Retention held by Comex</td><td class="n">57,350.82</td></tr>
+        <tr><td>Less every charge Comex has notified, if all upheld</td><td class="n">−8,670.28</td></tr>
+        <tr><td>Balance due to NHU on Comex's own numbers</td><td class="n">48,680.54</td></tr>
+        <tr><td>Add back charges on jobs that were never NHU's</td><td class="n">+1,551.00</td></tr>
+        <tr><td>Add back the unclear refs unless Comex produces an NHU permit for each</td><td class="n">+4,124.78</td></tr>
+        <tr class="total"><td>Balance if only the likely-NHU defects are conceded</td><td class="n">54,356.32</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="note"><strong>Two things to check before you send anything.</strong> Invoice 21/02 for £28,043.27 carries no retention line, so either no 5% was taken on it or it is buried in the figure. And the EOS approval notices with Comex's own assessment sheets went to Jack's mailbox, not yours. The assessment attachments (Whittlebury AFP2, Cosgrove AFP2, DH02, DH03, Potterspury 2 AFP4) show what Comex actually certified street by street, and are the strongest proof of what you were and were not paid for.</p>
+
+  <section>
+    <div class="sec-head"><h2>Not your work</h2><span class="count">4 refs · £1,551.00</span><p>No NHU permit, morning-report row, measure or application exists for these streets. Comex's own April 2022 defect register does not put NHU on any of them.</p></div>
+    <div id="not"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Likely your work</h2><span class="count">8 refs · £2,994.50</span><p>An NHU-named permit, or Comex's February–April 2022 NHU remedials list, puts NHU on the street. The charge may still be arguable on amount, but not on whose job it was.</p></div>
+    <div id="likely"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Unclear</h2><span class="count">15 refs · £4,124.78</span><p>NHU worked in the village but no permit or measure ties NHU to this reference, or the evidence points at someone else. Put the burden on Comex: ask for the permit holder and the works dates on each.</p></div>
+    <div id="unclear"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What to put to Comex</h2></div>
+    <ol style="margin:14px 0 0;padding-left:22px;font-size:15.5px;max-width:66ch">
+      <li>A statement of the retention held, invoice by invoice, reconciled to the £57,350.82 on your ledger. Ask them to confirm the release date under the subcontract of 2 June 2021.</li>
+      <li>For every defect and contra charge, the street-works permit reference and the named contractor. For the four not-yours refs, formal withdrawal of the charges.</li>
+      <li>Refund of the £3,608.00 retained on grab-lorry hire from 20 Apr 2022, which Hugo Hunte accepted on 18 May 2022 was outside the retention contract.</li>
+      <li>Copies of the EOS assessment sheets for AFP03042022 and AFP12062022 if Jack cannot find the originals.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <h3>How this was built</h3>
+    <ul>
+      <li>Defect charges come from the 25 <code>defects@comex2000uk.com</code> “Subbie Defect Final” notices (25 Nov 2022 to 8 Oct 2024) and the six COM-CC contra invoices Sharon Sweet issued on 29 Jun, 30 Jun and 15 Jul 2022, forwarded by Jack Redding. Each row links to the email.</li>
+      <li>Attribution uses the Contractor column in Comex's own <code>Gigaclear Defect Report 08.04.2022.xlsx</code> and <code>DEFECT permits.xlsx</code>, Comex's NHU remedials lists of 9, 16 and 27 Feb and 10, 22 Apr and 3 May 2022, the 30 Mar and 6 Apr 2022 permit reports, Steve Redding's application street lists and measures, and the NHU measure sheet of 31 Jan 2022.</li>
+      <li>Retention figures are the RETENTION line on each Comex invoice in Xero. The earlier ledger estimated £58,827 by assuming 5% on every invoice; the actual lines total £57,350.82.</li>
+      <li>“Not your work” means nothing in the mailbox puts NHU on the street. It is strong evidence, not proof: Comex may hold permits you were never copied on.</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+const H="https://outlook.office365.com/owa/?ItemID=", T="&exvsurl=1&viewmodel=ReadMessageItem";
+const P="AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd_4DikaRJ__Rq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEMAAAARw2C4FWkqEmIvdptNv4WZwA";
+const PJ="AQMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAADRYpDd_4DikaRJ__Rq3rexQcARw2C4FWkqEmIvdptNv4WZwAAAgEJAAAARw2C4FWkqEmIvdptNv4WZwA";
+const owa = id => H + encodeURIComponent(id.replace(/_/g,"+").replace(/-/g,"/")) + T;
+const link = (id, label) => '<a target="_blank" rel="noopener" href="'+owa(id)+'">'+label+'</a>';
+
+// Each ref: [ref, street/village, verdict, evidence, charges[]]
+// charge: [date, label, amount, messageId]
+const CONTRA_JUN = P+"CKL2HCgAAAA==";   // Jack fwd 30 Jun 2022: COM-CC-1383, COM-CC-1424
+const CONTRA_JUL = P+"CO06NrQAAAA==";   // Jack fwd 28 Jul 2022: COM-CC-1425..1428
+
+const NOT=[
+ ["KA260EM-KNGSTN-BRKS","Blenheim Rise / Balmoral Way to Newlands, road crossing at Arundel Close · Kings Sutton","ok",
+  "Nothing in the mailbox puts NHU in Kings Sutton at all: no permit, no morning-report row, no measure, no application street. The £105 contra of 29 Jun 2022 and the £105 final of 25 Nov 2022 look like the same charge notified twice.",
+  [["2022-06-29","Contra COM-CC-1383",105.00,CONTRA_JUN],["2022-11-25","Defect final",105.00,P+"Circ3HQAAAA=="],["2024-10-08","Defect final",595.50,P+"ETepFiwAAAA=="]]],
+ ["KA260EM-KNGSTN-ACKS","Both sides · Kings Sutton","ok",
+  "Same village, same gap: no NHU paperwork for Kings Sutton anywhere.",
+  [["2023-01-03","Defect final",283.50,P+"CoxYE0QAAAA=="]]],
+ ["KA260EM-KNGSTN-SRKS-A","Drive · Kings Sutton","ok",
+  "No NHU paperwork for Kings Sutton anywhere.",
+  [["2024-07-30","Defect final",177.00,P+"EH0SvuQAAAA=="]]],
+ ["KA260EM-CNGHWS-MSCW-A","Street unnamed · CNGHWS area","ok",
+  "The CNGHWS prefix appears in no other email in the mailbox. NHU never held a permit, measure or application under it.",
+  [["2024-07-29","Defect final",285.00,P+"EH0SvkgAAAA=="]]]
+];
+
+const LIKELY=[
+ ["KA260EM-LTBRN-ARLB","Ashby Road, permit 99761 · Braunston","no",
+  "NHU-named permit on Ashby Road in the 6 Apr 2022 morning report, and the ref sits on Comex's NHU remedials list.",
+  [["2022-11-25","Defect final",378.00,P+"Circ3HAAAAA=="]]],
+ ["KA260EM-LTBRN-HSLB","High Street footpath · Braunston","no",
+  "Marlon Brown's 3 May 2022 outstanding-defects list to NHU includes “outside 20 High Street Braunston, box in verge leaning”. Two contra invoices of 15 Jul 2022 sit on HSLB-1 and HSLB3 as well as the final.",
+  [["2022-07-15","Contra HSLB-1",157.50,CONTRA_JUL],["2022-07-15","Contra HSLB3",157.50,CONTRA_JUL],["2023-01-09","Defect final",479.50,P+"CpyJ6cwAAAA=="]]],
+ ["KA260EM-LTBRN-WRLB2","Road · Braunston","no",
+  "On Comex's April 2022 NHU remedials list.",
+  [["2022-11-30","Defect final",336.00,P+"CjJ4oywAAAA=="]]],
+ ["KA260EM-WHTTB-SLPE","Scriveners Lane, junction Careys Road to outside 20 · Whittlebury","no",
+  "Comex's Gigaclear Defect Report of 8 Apr 2022 lists DF04506 on this ref with NHU as contractor (151m of ducting in carriageway). The Whittlebury AFP2 assessment is in your mailbox.",
+  [["2023-03-23","Defect final",409.50,P+"C2KLghQAAAA=="]]],
+ ["KA260EM-BGBRK-SB","Smitherway, permit 110096 · Bugbrooke","no",
+  "NHU held Bugbrooke permits in the 6 Apr 2022 morning report and the ref is on Comex's NHU remedials list.",
+  [["2023-01-03","Defect final",371.00,P+"CoxYE0gAAAA=="]]],
+ ["KA260EM-OLDSTR-CD","Outside 50 · Old Stratford","no",
+  "The NHU measure sheet of 31 Jan 2022 covers Old Stratford PIA cabling, and NHU held Old Stratford permits in April 2022.",
+  [["2023-01-30","Defect final",157.50,P+"CtkDjhQAAAA=="]]],
+ ["KA260EM-DEHNG-01-PCDH","Pound Close, junction St Johns Lane to outside 7 · Wicken","no",
+  "Permit 110074 (PCDH-01) granted to North Herts Utilities Limited on 12 Apr 2022, works 6 to 8 Apr 2022: 10m of ducting in the footway.",
+  [["2024-08-02","Defect final",177.00,P+"EIXkpKwAAAA=="]]],
+ ["KA260EM-DEHNG-01-SGDH","Springfield Gardens, outside 17 to outside 35 · Deanshanger","no",
+  "Permit granted 29 Mar 2022 to North Herts Utilities Limited, works 28 to 30 Mar 2022 (30 Mar 2022 report). One caveat: Comex's June 2022 core-failure list names Comex 2000 as contractor on SGDH-02, so ask which permit the defect sits on.",
+  [["2024-07-30","Defect final",371.00,P+"EH0SvsAAAAA=="]]]
+];
+
+const UNCLEAR=[
+ ["KA260EM-BGBRK-SWB","Outside 31 · Bugbrooke","mid",
+  "NHU held other Bugbrooke permits, but none on this ref. You forwarded and replied the day it arrived.",
+  [["2023-01-03","Defect final",283.50,P+"CoxYE3AAAAA=="]]],
+ ["KA260EM-BGBRK-LGB","Lime Grove, permit 110187 · Bugbrooke","mid",
+  "No NHU permit row found on Lime Grove.",
+  [["2023-01-03","Defect final",441.00,P+"CoxYE2wAAAA=="]]],
+ ["KA260EM-BGBRK-ARB","Outside 8 · Bugbrooke","mid",
+  "The works on this ref closed in June 2022, after NHU's last civils invoice on 19 Apr 2022. You forwarded it on 12 Dec 2022.",
+  [["2022-12-12","Defect final",182.00,"AAMkADJlMzJkOGZiLWRhMmMtNDk1Ny04ZjQ4LWU1M2I0NjkzNzkzMgBGAAAAAABFikN37gOKRpEn75Gret7FBwBHDYLgVaSoSYi92m02-hZnAAAAAAEMAABHDYLgVaSoSYi92m02-hZnAAKUfRAQAAA="]]],
+ ["KA260EM-BGBRK-LRBRC","Barn · Bugbrooke","mid",
+  "No NHU permit row found. You replied on 23 Jan 2023.",
+  [["2023-01-23","Defect final",147.00,P+"CsT3BngAAAA=="]]],
+ ["KA260EM-BGBRK-SWB2","Outside 69 · Bugbrooke","mid",
+  "No NHU permit row found.",
+  [["2024-07-19","Defect final",177.00,P+"EFveiyQAAAA=="]]],
+ ["KA260EM-BGBRK-SCB","Outside 15 and outside 7 · Bugbrooke","mid",
+  "NHU's permit on SCB was cancelled on 30 Mar 2022 and the permanent works ran 22 to 26 Jul 2022, three months after NHU's civils ended. Charged twice. You forwarded and replied on 20 Feb 2023.",
+  [["2023-02-20","Defect final",453.00,P+"Cw_nqXwAAAA=="],["2023-09-29","Defect final",209.00,P+"DVlfPmAAAAA=="]]],
+ ["KA260EM-BGBRK-BCB1","Beech Close · Bugbrooke","mid",
+  "Contra invoice only, no defect final and no NHU permit row found.",
+  [["2022-07-15","Contra COM-CC",105.00,CONTRA_JUL]]],
+ ["KA260EM-LTBRN-GWLB","Greenway · Braunston","mid",
+  "Greenway (GWLB1) was permitted to Comex's own in-house crew in March 2022.",
+  [["2024-07-17","Defect final",526.00,P+"EFveiPwAAAA=="]]],
+ ["KA260EM-LTBRN-FVLBA","Field View, 1 to opposite 1 · Braunston","mid",
+  "New defect DF06557 raised 24 Jan 2024 with a further inspection on 21 Feb 2024, but no final charge yet. NHU did measure Field View in the week ending 13 Mar 2022, so expect this one to land.",
+  [["2024-01-24","New defect DF06557",0,P+"Dow8qiQAAAA=="],["2024-02-21","Further inspection",0,P+"DtiW7yQAAAA=="]]],
+ ["KA260EM-LTBRN-DLLB1A","Dark Lane · Braunston","mid",
+  "Contra invoice only. No NHU permit row found on Dark Lane.",
+  [["2022-07-15","Contra COM-CC",157.50,CONTRA_JUL]]],
+ ["KA260EM-OLDSTR-MAOS","Junction Willow Grove to outside 35, both sides · Old Stratford","mid",
+  "Willow Grove was permitted to Spliceteq, not NHU. You forwarded it on 9 Mar 2023.",
+  [["2023-03-09","Defect final",231.00,P+"Cz1HV3wAAAA=="]]],
+ ["KA260EM-DEHNG-01-BRDH","Lane · Deanshanger","mid",
+  "NHU worked Deanshanger 01 (measure sheet 31 Jan 2022) but no permit row found on this ref.",
+  [["2022-12-14","Defect final",340.00,P+"Clw5WCQAAAA=="]]],
+ ["KA260EM-POTTR-02-CHA28","Outside 49 · Potterspury","mid",
+  "The Potterspury 2 AFP4 assessment is in your mailbox, but no permit ties NHU to this ref, and Comex's June 2022 core-failure list names Comex 2000 on Potterspury MUP2.",
+  [["2023-11-20","Defect final",296.00,P+"DeEfCFwAAAA=="]]],
+ ["KA260EM-WHTTB-LSPE","Lane · Whittlebury","mid",
+  "NHU worked Whittlebury (AFP2) but no permit row found on this ref.",
+  [["2024-07-23","Defect final",455.00,P+"EG1SHxwAAAA=="]]],
+ ["UD-1630","Utility damage, no location given","mid",
+  "Contra invoice COM-CC-1424 with no works ref, street or date of damage. Ask for the damage report.",
+  [["2022-06-30","Contra COM-CC-1424",121.78,CONTRA_JUN]]]
+];
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const gbp = n => "£"+n.toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+const LABEL={ok:"Not yours",no:"Likely yours",mid:"Unclear"};
+function render(id, rows){
+  let total=0;
+  document.getElementById(id).innerHTML = rows.map(r=>{
+    const [ref,where,v,why,charges]=r;
+    const sum=charges.reduce((a,c)=>a+c[2],0); total+=sum;
+    const list=charges.map(c=>'<li><span class="d">'+c[0]+'</span><span>'+esc(c[1])+'</span>'
+      +(c[2]?'<span class="amt">'+gbp(c[2])+'</span>':'<span class="amt">no charge yet</span>')
+      +link(c[3],"open")+'</li>').join("");
+    return '<div class="row">'
+      +'<div class="ref">'+esc(ref)+'<small>'+esc(where)+'</small></div>'
+      +'<div class="why">'+esc(why)+'<ul class="charges">'+list+'</ul></div>'
+      +'<div class="sum"><b>'+gbp(sum)+'</b><span class="verdict '+v+'">'+LABEL[v]+'</span></div>'
+      +'</div>';
+  }).join("") + '<div class="sec-total">section total <b>'+gbp(total)+'</b></div>';
+  return total;
+}
+render("not",NOT); render("likely",LIKELY); render("unclear",UNCLEAR);
+</script>
